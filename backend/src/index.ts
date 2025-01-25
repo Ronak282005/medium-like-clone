@@ -2,6 +2,8 @@ import { Hono } from 'hono'
 import { PrismaClient } from '@prisma/client/edge'
 import { withAccelerate } from '@prisma/extension-accelerate'
 import { sign, verify } from 'hono/jwt'
+import { userRouter } from './routes/user'
+import { blogRouter } from './routes/blog'
 
 const app = new Hono<{
   Bindings: {
@@ -9,6 +11,11 @@ const app = new Hono<{
     JWT_SECRET : string
   }
 }>()
+
+
+app.route("/api/v1/user",userRouter)
+app.route("/api/v1/blog",blogRouter)
+
 
 // auth middleware
 app.use("/api/v1/blog/*",async (c,next)=>{
@@ -27,53 +34,7 @@ app.use("/api/v1/blog/*",async (c,next)=>{
   }
 })
 
-// signup route
-app.post("/api/v1/signup",async (c)=>{
-  
-  const prisma = new PrismaClient({
-    datasourceUrl : c.env.DATABASE_URL,
-  }).$extends(withAccelerate())
-  
-  const body = await c.req.json()
-  try {
-    const user = await prisma.user.create({
-      data:{
-        email : body.email,
-        password : body.password,
-        name : body.name
-      }
-    })
-    
-    const token = await sign({id : user},c.env.JWT_SECRET)
-    
-    return c.json({jwt : token})
-    
-  } catch (error) {
-    c.status(403)
-    return c.json({message: "User already exists/error while creating user"})
-  }
-})
 
-// signin route
-app.post("/api/v1/signin",async (c)=>{
-  const prisma = new PrismaClient({
-    datasourceUrl : c.env.DATABASE_URL,
-  }).$extends(withAccelerate())
-
-  const body = await c.req.json()
-  const user = await prisma.user.findFirst({
-    where: {
-      email: body.email
-    }
-  })
-  if(!user){
-    c.status(403)
-    return c.json({error : "user not found"})
-  }
-
-  const jwt = sign({id : user},c.env.JWT_SECRET)
-  return c.json({jwt})
-})
 
 
 // blog routes post
