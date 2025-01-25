@@ -17,19 +17,24 @@ export const blogRouter = new Hono<{
 
 // auth middleware
 blogRouter.use("/*",async (c,next)=>{
-    const authorization = c.req.header('authorization')
-    if(!authorization){
-      c.status(403)
-      return c.json({message: "Unauthorized"})
-    }
-    const token = authorization.split(" ")[1]
-    const user = await verify(token,c.env.JWT_SECRET)
-    if(user){
-        c.set("userId" , (user as { id: string }).id)
-        await next()
-    }else{
-      c.status(403)
-      return c.json({message: "Unauthorized"})
+    try{
+        const authorization = c.req.header('authorization')
+        if(!authorization){
+          c.status(403)
+          return c.json({message: "Unauthorized"})
+        }
+        const token = authorization.split(" ")[1]
+        const user = await verify(token,c.env.JWT_SECRET)
+        if(user){
+            c.set("userId" , (user as { id: string }).id)
+            await next()
+        }else{
+          c.status(403)
+          return c.json({message: "Unauthorized"})
+        }
+    }catch(e){
+        c.status(403)
+        return c.json({error: e})
     }
   })
 
