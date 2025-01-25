@@ -10,6 +10,7 @@ const app = new Hono<{
   }
 }>()
 
+// auth middleware
 app.use("/api/v1/blog/*",async (c,next)=>{
   const authorization = c.req.header('authorization')
   if(!authorization){
@@ -26,6 +27,7 @@ app.use("/api/v1/blog/*",async (c,next)=>{
   }
 })
 
+// signup route
 app.post("/api/v1/signup",async (c)=>{
   
   const prisma = new PrismaClient({
@@ -52,7 +54,7 @@ app.post("/api/v1/signup",async (c)=>{
   }
 })
 
-
+// signin route
 app.post("/api/v1/signin",async (c)=>{
   const prisma = new PrismaClient({
     datasourceUrl : c.env.DATABASE_URL,
@@ -74,16 +76,19 @@ app.post("/api/v1/signin",async (c)=>{
 })
 
 
+// blog routes post
 app.post("/api/v1/blog",(c)=>{
   return c.json({message: "Blogs post"})
 })
 
 
+// blog routes put
 app.put("/api/v1/blog",(c)=>{
   return c.json({message: "Blogs put"})
 })
 
 
+// blog routes get
 app.get("/api/v1/blog/:id",(c)=>{
   return c.json({message: "Blogs get"})
 })
