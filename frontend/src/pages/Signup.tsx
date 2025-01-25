@@ -1,6 +1,10 @@
+import { Quote } from "../components/Quote"
 
 export const Signup = () => {
   return (
-    <div>Signup</div>
+    <div>
+        Signup
+        <Quote />
+    </div>
   )
 }
