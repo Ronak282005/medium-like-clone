@@ -16,7 +16,7 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
         const response = await axios.post(`${BACKEND_URL}/api/v1/user/${type === "signup" ? "signup" : "signin"}`, postInputs);
         const jwt = response.data;
         localStorage.setItem("token", jwt);
-        navigate("/blog")
+        navigate("/blogs")
     }
     return <div className="h-screen flex justify-center flex-col">
     <div className="flex justify-center">
