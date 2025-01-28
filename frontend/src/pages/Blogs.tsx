@@ -9,9 +9,9 @@ export const Blogs = () => {
   return (
     <div className="flex justify-center">
         <div className="max-w-xl">
-          {blogs.map(blog =>{
-            <BlogCard />
-          })}
+          {blogs.map(blog => (
+            <BlogCard authorName={blog.author.name} title={blog.title} content={blog.content} id={blog.id} publishedDate="2 Feb 2025" />
+          ))}
         </div>
     </div>
   )
