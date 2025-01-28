@@ -13,7 +13,7 @@ export const useBlog = () => {
             }
         })
             .then(response => {
-                setBlogs(response.data)
+                setBlogs(response.data.blogs)
                 setLoading(false)
             })
     },[])
