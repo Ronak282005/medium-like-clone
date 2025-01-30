@@ -15,24 +15,23 @@ interface Blog {
 }
 
 export const useBlogs = () => {
-    const [loding, setLoading] = useState(true)
+    const [loading, setLoading] = useState(true)
     const [blogs, setBlogs] = useState<Blog[]>([])
-
+    
     useEffect(()=>{
         axios.get(`${BACKEND_URL}/api/v1/blog/bulk`, {
             headers: {
                 Authorization: localStorage.getItem('token')
             }
         })
-            .then(response => {
-                setBlogs(response.data.blogs)
-                setLoading(false)
-            })
+        .then(response => {
+            setBlogs(response.data.blogs)
+            setLoading(false)
+        })
     },[])
     return{
-        loding,
+        loading,
         blogs
     }
     
 }
-

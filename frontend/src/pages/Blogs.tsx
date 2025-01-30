@@ -3,10 +3,10 @@ import { BlogCard } from "../components/BlogCard"
 import { useBlogs } from "../hooks"
 
 export const Blogs = () => {
-  const {loding, blogs} = useBlogs()
+  const {loading, blogs} = useBlogs()
   console.log(blogs);
   
-  if(loding){
+  if(loading){
       return <div className="flex justify-center">Loading...</div>
   }
   return (
