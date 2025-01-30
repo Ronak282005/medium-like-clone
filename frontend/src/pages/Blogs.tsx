@@ -13,7 +13,7 @@ export const Blogs = () => {
       <div className="flex justify-center">
           <div className="max-w-xl">
             {blogs.map(blog => (
-              <BlogCard authorName={blog.author || "Ronak"} title={blog.title} content={blog.content} id={blog.id} publishedDate="2 Feb 2025" />
+              <BlogCard authorName={blog.author || "Anonymous"} title={blog.title} content={blog.content} id={blog.id} publishedDate="2 Feb 2025" />
             ))}
           </div>
       </div>
