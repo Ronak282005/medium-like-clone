@@ -34,7 +34,7 @@ userRouter.post("/signup",async (c)=>{
       })
       
       const token = await sign({id : user},c.env.JWT_SECRET)
-      
+
       return c.json({jwt : token})
       
     } catch (error) {
@@ -48,7 +48,7 @@ userRouter.post("/signup",async (c)=>{
     const prisma = new PrismaClient({
       datasourceUrl : c.env.DATABASE_URL,
     }).$extends(withAccelerate())
-  
+    
     const body = await c.req.json()
     const {success} = signinInput.safeParse(body)
     if(!success){
@@ -64,7 +64,7 @@ userRouter.post("/signup",async (c)=>{
       c.status(403)
       return c.json({error : "user not found"})
     }
-  
-    const jwt = sign({id : user},c.env.JWT_SECRET)
+    
+    const jwt = await sign({id : user},c.env.JWT_SECRET)
     return c.json({jwt})
   })

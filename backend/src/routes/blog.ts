@@ -18,7 +18,7 @@ export const blogRouter = new Hono<{
 
 // auth middleware
 blogRouter.use("/*",async (c,next)=>{
-    const authHeader = c.req.header("authorization") || "";
+    const authHeader = c.req.header("authorization") || "" || c.req.header("Authorization") || "";
     try {
         const user = await verify(authHeader, c.env.JWT_SECRET);
         if (user) {
@@ -33,6 +33,7 @@ blogRouter.use("/*",async (c,next)=>{
     } catch(e) {
         c.status(403);
         return c.json({
+            error : e,
             message: "You are not logged in"
         })
     }
