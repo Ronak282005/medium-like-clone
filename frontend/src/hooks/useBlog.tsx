@@ -7,7 +7,9 @@ interface Blog {
     id: number
     title: string
     content: string
-    author: string
+    author: {
+        name: string
+    }
     publishedDate: string
     name : string
 }
