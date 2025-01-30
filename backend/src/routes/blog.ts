@@ -17,52 +17,70 @@ export const blogRouter = new Hono<{
 
 
 // auth middleware
-blogRouter.use("/*",async (c,next)=>{
-    const authHeader = c.req.header("authorization") || "" || c.req.header("Authorization") || "";
+blogRouter.use("/*", async (c, next) => {
+    const authHeader = c.req.header("authorization") || "";
+
     try {
         const user = await verify(authHeader, c.env.JWT_SECRET);
-        if (user) {
-            c.set("userId", (user as { id: string }).id);
+        console.log("Decoded User:", user); // ✅ Debug log to see what 'user' contains
+
+        // ✅ Ensure 'user' is an object and has an 'id' property
+        if (typeof user === "object" && user !== null && "id" in user && typeof user.id === "string") {
+            c.set("userId", user.id); // ✅ Safe to set
             await next();
         } else {
             c.status(403);
-            return c.json({
-                message: "You are not logged in"
-            })
+            return c.json({ message: "Invalid token payload" });
         }
-    } catch(e) {
+    } catch (e) {
+        console.error("JWT Verification Error:", e);
         c.status(403);
-        return c.json({
-            error : e,
-            message: "You are not logged in"
-        })
+        return c.json({ message: "You are not logged in" });
     }
-  })
+});
+
+
 
 
 // blog routes post
-blogRouter.post("/",async(c)=>{
+blogRouter.post("/", async (c) => {
     const prisma = new PrismaClient({
-    datasourceUrl : c.env.DATABASE_URL,
-    }).$extends(withAccelerate())
-        
-    const body = await c.req.json()
-    const {success} = createBlogInput.safeParse(body)
-    if(!success){
-        c.status(400)
-        return c.json({error : "Invalid input"})
-    }
-    const authorId = c.get("userId")
+        datasourceUrl: c.env.DATABASE_URL,
+    }).$extends(withAccelerate());
+
+    const body = await c.req.json();
+    const { success } = createBlogInput.safeParse(body);
     
-    const blog = await prisma.post.create({
-        data : {
-            title : body.title,
-            content : body.content,
-            authorId : authorId
-        }
-    })
-    return c.json({id : blog.id})
-})
+    if (!success) {
+        c.status(400);
+        return c.json({ error: "Invalid input" });
+    }
+
+    const authorId = c.get("userId"); 
+    console.log("Author ID:", authorId); 
+
+    // if (typeof authorId !== "string") {
+    //     c.status(400);
+    //     return c.json({ error: "Invalid author ID" });
+    // }
+
+    try {
+        const blog = await prisma.post.create({
+            data: {
+                title: body.title,
+                content: body.content,
+                authorId: authorId,
+            },
+        });
+
+        return c.json({ id: blog.id });
+    } catch (error) {
+        console.error("Error creating blog:", error);
+        c.status(500);
+        return c.json({ error: "Failed to create blog" });
+    }
+});
+
 
 
 // blog routes put
