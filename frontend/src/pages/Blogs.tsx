@@ -1,9 +1,9 @@
 import { Appbar } from "../components/Appbar"
 import { BlogCard } from "../components/BlogCard"
-import { useBlog } from "../hooks/useBlog"
+import { useBlogs } from "../hooks/useBlog"
 
 export const Blogs = () => {
-  const {loding, blogs} = useBlog()
+  const {loding, blogs} = useBlogs()
   console.log(blogs);
   
   if(loding){
