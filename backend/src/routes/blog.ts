@@ -22,11 +22,10 @@ blogRouter.use("/*", async (c, next) => {
 
     try {
         const user = await verify(authHeader, c.env.JWT_SECRET);
-        console.log("Decoded User:", user); // ✅ Debug log to see what 'user' contains
+        console.log("Decoded User:", user);
 
-        // ✅ Ensure 'user' is an object and has an 'id' property
         if (typeof user === "object" && user !== null && "id" in user && typeof user.id === "string") {
-            c.set("userId", user.id); // ✅ Safe to set
+            c.set("userId", user.id);
             await next();
         } else {
             c.status(403);
@@ -59,10 +58,10 @@ blogRouter.post("/", async (c) => {
     const authorId = c.get("userId"); 
     console.log("Author ID:", authorId); 
 
-    // if (typeof authorId !== "string") {
-    //     c.status(400);
-    //     return c.json({ error: "Invalid author ID" });
-    // }
+    if (typeof authorId !== "string") {
+        c.status(400);
+        return c.json({ error: "Invalid author ID" });
+    }
 
     try {
         const blog = await prisma.post.create({
