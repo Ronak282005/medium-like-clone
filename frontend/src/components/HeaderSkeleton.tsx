@@ -11,9 +11,12 @@ const Shimmer = ({ className }: { className: string }) => (
 
 const HeaderSkeleton = () => {
   return (
-    <div className="border-b flex justify-between items-center px-10 py-4">
+    <div className="border-b flex justify-between px-10 py-4">
       <Shimmer className="h-6 w-20" />
-      <Shimmer className="h-10 w-10 rounded-full" />
+      <div className="flex">
+        <Shimmer className="h-10 w-24 rounded-full mr-4" />
+        <Shimmer className="h-10 w-10 rounded-full" />
+      </div>
     </div>
   );
 };
