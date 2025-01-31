@@ -1,5 +1,7 @@
 import { Appbar } from "../components/Appbar"
 import { BlogCard } from "../components/BlogCard"
+import CardSkeleton from "../components/CardSkeleton"
+import HeaderSkeleton from "../components/HeaderSkeleton"
 import { useBlogs } from "../hooks"
 
 export const Blogs = () => {
@@ -7,7 +9,16 @@ export const Blogs = () => {
   console.log(blogs);
   
   if(loading){
-      return <div className="flex justify-center">Loading...</div>
+      return <div>
+        <HeaderSkeleton/>
+        <div className="flex flex-col justify-center items-center space-y-4">
+          <CardSkeleton/>
+          <CardSkeleton/>
+          <CardSkeleton/>
+          <CardSkeleton/>
+          <CardSkeleton/>
+        </div>
+      </div>
   }
   return (
     <div>
