@@ -72,7 +72,9 @@ blogRouter.post("/", async (c) => {
             },
         });
 
-        return c.json("Blog created successfully");
+        return c.json({
+            id : blog.id
+        });
     } catch (error) {
         console.error("Error creating blog:", error);
         c.status(500);
